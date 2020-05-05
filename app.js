@@ -132,6 +132,19 @@ app.use('/users', users(express, logger, app.config));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
+	
+	var ip;
+    if (req.headers && req.headers['X-Forwarded-For']) {
+        ip = req.headers['X-Forwarded-For'].split(",")[0];
+    } else if (req.connection && req.connection.remoteAddress) {
+        ip = req.connection.remoteAddress;
+    } else {
+        ip = req.ip;
+    }
+    logger.info("client IP is *********************" + ip);
+    //console.log("client IP is *********************" + ip);
+
+	
 	var err = new Error('Not Found');
 	err.status = 404;
 	next(err);
